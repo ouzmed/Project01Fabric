@@ -136,7 +136,7 @@ print(news_json)
 print(news_json['json_object']['name'])
 print(news_json['json_object']['description'])
 print(news_json['json_object']['url'])
-#print(news_json['json_object']['provider']['image']['thumbnail']['contentUrl'])
+print(news_json['json_object']['provider'][0]['image']['thumbnail']['contentUrl'])
 print(news_json['json_object']['provider'][0]['name'])
 print(news_json['json_object']['datePublished'])
 
@@ -163,13 +163,14 @@ for js_str in json_list:
         #parse the json into a dictionary
         article = json.loads(js_str)
 
-        #extract information from the dictionary
-        description.append(article['json_object']['description'])
-        title.append(article['json_object']['name'])
-        image.append(article['json_object']['provider'][0]['image']['thumbnail']['contentUrl'])
-        url.append(article['json_object']['url'])
-        provider.append(article['json_object']['provider'][0]['name'])
-        datePublished.append(article['json_object']['datePublished'])
+        if article['json_object'].get("image", {}).get('thumbnail',{}).get('contentUrl'):
+            #extract information from the dictionary
+            description.append(article['json_object']['description'])
+            title.append(article['json_object']['name'])
+            image.append(article['json_object']['provider'][0]['image']['thumbnail']['contentUrl'])
+            url.append(article['json_object']['url'])
+            provider.append(article['json_object']['provider'][0]['name'])
+            datePublished.append(article['json_object']['datePublished'])
     except Exception as e:
         print(f"Error processing JSON object:{e}")
 
@@ -245,15 +246,57 @@ display(df_cleaned_final)
 
 # MARKDOWN ********************
 
-# Read the JSON file as a Dataframe
+# Writing the final Dataframe to the lakehouse db in a delta format
 
 # CELL ********************
 
-df = spark.read.option("multiline", "true").json("Files/bing-latest-news.json")
+from pyspark.sql.utils import AnalysisException
+
+try:
+    table_name = 'bing_lake_db.tbl_latest_news'
+    df_cleaned_final.write.format("delta").saveAsTable(table_name)
+
+except AnalysisException:
+
+    print("Tables Already Exists")
+    
+    df_cleaned_final.createOrReplaceTempView("vw_df_cleaned_final")
+
+    spark.sql(f"""  MERGE INTO {table_name} target_table
+                    USING vw_df_cleaned_final source_view
+
+                    ON source_view.url = target_table.url
+
+                    WHEN MATCHED AND
+                    source_view.title <> target_table.title OR
+                    source_view.description <> target_table.description OR
+                    source_view.image <> target_table.image OR
+                    source_view.provider <> target_table.provider OR
+                    source_view.datePublished <> target_table.datePublished
+
+                    THEN UPDATE SET *
+
+                    when NOT MATCHED THEN INSERT *
+
+
+            """)
 
 # METADATA ********************
 
 # META {
 # META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
+# MAGIC 
+# MAGIC SELECT count(*) from bing_lake_db.tbl_latest_news
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
 # META   "language_group": "synapse_pyspark"
 # META }
