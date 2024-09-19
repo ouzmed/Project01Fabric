@@ -8,7 +8,7 @@
             "type": "RestSource",
             "requestMethod": "GET",
             "additionalHeaders": {
-              "Ocp-Apim-Subscription-Key": "ff8abf752b7341e58534d28c58a736df"
+              "Ocp-Apim-Subscription-Key": "c099e2380d7a4c0caea2b0c25cb46ec4"
             },
             "paginationRules": {
               "supportRFC5988": "true"
@@ -18,11 +18,14 @@
             "datasetSettings": {
               "type": "RestResource",
               "typeProperties": {
-                "relativeUrl": "?q=latest+news&count=100&freshness=Day&mkt=fr-FR"
+                "relativeUrl": {
+                  "value": "?q=@{pipeline().parameters.search_term}&count=100&freshness=Day&mkt=en-US",
+                  "type": "Expression"
+                }
               },
               "schema": [],
               "externalReferences": {
-                "connection": "42caad41-6d13-4819-9c5d-5e12edcf2a5a"
+                "connection": "58064002-cfb1-4ad6-9d34-4b8584838c58"
               },
               "annotations": []
             }
@@ -70,7 +73,59 @@
         },
         "name": "Copy latest news",
         "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "4ab54925-3933-4cd5-a58b-f10bab479a2c",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Data Transformation",
+        "dependsOn": [
+          {
+            "activity": "Copy latest news",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "8b665034-8818-4058-98be-0760a6c3d14e",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Sentimental Analysis",
+        "dependsOn": [
+          {
+            "activity": "Data Transformation",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       }
-    ]
+    ],
+    "parameters": {
+      "search_term": {
+        "type": "string",
+        "defaultValue": "latest news"
+      }
+    }
   }
 }

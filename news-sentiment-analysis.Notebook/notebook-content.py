@@ -104,6 +104,10 @@ display(sentiment_df)
 # META   "language_group": "synapse_pyspark"
 # META }
 
+# MARKDOWN ********************
+
+# ## remove unwanted columns
+
 # CELL ********************
 
 sentiment_df_final = sentiment_df.drop("error","response")
@@ -125,6 +129,23 @@ display(sentiment_df_final)
 # META   "language": "python",
 # META   "language_group": "synapse_pyspark"
 # META }
+
+# CELL ********************
+
+from pyspark.sql.functions import col, to_date
+
+sentiment_df_final = sentiment_df_final.withColumn("datePublished", to_date(col("datePublished"), "dd-MMM-yyyy"))
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ## Type 1 Merge
 
 # CELL ********************
 
