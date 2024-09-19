@@ -65,6 +65,17 @@ display(df)
 
 # CELL ********************
 
+display(df.printSchema)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
 from pyspark.sql.functions import explode
 df_explode = df.select(explode(df["value"]).alias("json_object"))
 
@@ -101,6 +112,19 @@ json_list = df_explode.toJSON().collect()
 # META   "language_group": "synapse_pyspark"
 # META }
 
+# CELL ********************
+
+# test 02
+
+print(json_list[0])
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
 # MARKDOWN ********************
 
 # testing the json string list
@@ -115,6 +139,20 @@ print(json_list[1])
 # META   "language": "python",
 # META   "language_group": "synapse_pyspark"
 # META }
+
+# MARKDOWN ********************
+
+# datePublished
+# description
+# image
+# provider -> name
+#          -> image -> thumbnail
+#          -> Type 
+# url
+
+# MARKDOWN ********************
+
+# using the function json.loads from the library json
 
 # CELL ********************
 
@@ -246,7 +284,11 @@ display(df_cleaned_final)
 
 # MARKDOWN ********************
 
-# Writing the final Dataframe to the lakehouse db in a delta format
+# ### Writing the final Dataframe to the lakehouse db in a delta format
+
+# MARKDOWN ********************
+
+# #### SCD Type 1
 
 # CELL ********************
 
