@@ -1,23 +1,20 @@
 CREATE PROC [dbo].[sp_creationTable]
-
 AS
 BEGIN
 
-    DROP TABLE IF EXISTS [dbo].[provider_agg];
-    CREATE TABLE [dbo].[provider_agg]
-     (
-
-        provider varchar(60),
-        sentiment varchar(10),
-        nombre integer
-    )
-
-    INSERT INTO [dbo].[provider_agg]
+    DROP TABLE IF EXISTS bing_warehouse_db.dbo.provider_agg
+    CREATE TABLE bing_warehouse_db.dbo.provider_agg
+      (
+        provider VARCHAR(255),
+        sentiment VARCHAR(255),
+        total INT
+      );
+    
+    INSERT INTO bing_warehouse_db.dbo.provider_agg
     SELECT
         provider,
         sentiment,
-        count(1) as nombre
-    FROM bing_lake_db.Tables.tbl_sentiment_analysis
+        count(1) as total
+    FROM bing_lake_db.dbo.tbl_sentiment_analysis
     GROUP BY provider, sentiment
-    ORDER BY nombre
 END

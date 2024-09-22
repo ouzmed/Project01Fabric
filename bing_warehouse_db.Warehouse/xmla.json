@@ -45,12 +45,12 @@
             ]
           },
           {
-            "name": "nombre",
+            "name": "Total",
             "dataType": "int64",
-            "sourceColumn": "nombre",
+            "sourceColumn": "Total",
             "formatString": "0",
             "sourceProviderType": "int",
-            "sourceLineageTag": "nombre",
+            "sourceLineageTag": "Total",
             "summarizeBy": "sum",
             "annotations": [
               {
