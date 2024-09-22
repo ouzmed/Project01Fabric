@@ -119,6 +119,41 @@
             ]
           }
         ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[sp_creationTable]"
+        },
+        "linkedService": {
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "52b89a8d-accd-41b0-9a1d-42cd524b1dfa",
+              "endpoint": "u7mbl3esfzcevd3xlm626x5or4-dkbtoerlygnethonp5m7ozp5va.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "1237831a-c12b-499a-9dcd-7f59f765fda8"
+            },
+            "annotations": []
+          },
+          "name": "bing_warehouse_db",
+          "objectId": "52b89a8d-accd-41b0-9a1d-42cd524b1dfa"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "alimentation warehouse",
+        "dependsOn": [
+          {
+            "activity": "Sentimental Analysis",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       }
     ],
     "parameters": {

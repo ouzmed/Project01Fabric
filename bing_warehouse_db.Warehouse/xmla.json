@@ -11,6 +11,82 @@
     },
     "defaultPowerBIDataSourceVersion": "powerBI_V3",
     "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "provider_agg",
+        "sourceLineageTag": "[dbo].[provider_agg]",
+        "columns": [
+          {
+            "name": "provider",
+            "dataType": "string",
+            "sourceColumn": "provider",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "provider",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "sentiment",
+            "dataType": "string",
+            "sourceColumn": "sentiment",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "sentiment",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "nombre",
+            "dataType": "int64",
+            "sourceColumn": "nombre",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "nombre",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "provider_agg",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      }
+    ],
+    "expressions": [
+      {
+        "name": "DatabaseQuery",
+        "kind": "m",
+        "expression": "let\n    database = {{TDS_Endpoint}}\nin\n    database\n"
+      }
+    ],
     "annotations": [
       {
         "name": "__PBI_TimeIntelligenceEnabled",
