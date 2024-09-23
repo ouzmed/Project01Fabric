@@ -45,7 +45,7 @@
             ]
           },
           {
-            "name": "Total",
+            "name": "total",
             "dataType": "int64",
             "sourceColumn": "Total",
             "formatString": "0",
