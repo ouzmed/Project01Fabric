@@ -189,6 +189,7 @@ print(news_json['json_object']['datePublished'])
 
 description =[]
 title =[]
+category =[]
 image =[]
 url =[]
 provider =[]
@@ -205,6 +206,7 @@ for js_str in json_list:
             #extract information from the dictionary
             description.append(article['json_object']['description'])
             title.append(article['json_object']['name'])
+            category.append(article['json_object']['category'])
             image.append(article['json_object']['provider'][0]['image']['thumbnail']['contentUrl'])
             url.append(article['json_object']['url'])
             provider.append(article['json_object']['provider'][0]['name'])
