@@ -19,7 +19,7 @@
               "type": "RestResource",
               "typeProperties": {
                 "relativeUrl": {
-                  "value": "?q=@{pipeline().parameters.search_term}&count=100&freshness=Day&mkt=en-US",
+                  "value": "?q=@{pipeline().parameters.search_term}&count=100&freshness=Day&mkt=en-FR",
                   "type": "Expression"
                 }
               },
