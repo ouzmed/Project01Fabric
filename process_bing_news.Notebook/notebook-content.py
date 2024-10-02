@@ -314,7 +314,7 @@ except AnalysisException:
                     WHEN MATCHED AND
                     source_view.title <> target_table.title OR
                     source_view.description <> target_table.description OR
-                    source_view.contentUrl <> target_table.contentUrl OR
+                    source_view.image <> target_table.image OR
                     source_view.provider <> target_table.provider OR
                     source_view.datePublished <> target_table.datePublished
 
