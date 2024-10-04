@@ -1,0 +1,81 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Parquet1",
+						"type": "DatasetReference"
+					},
+					"name": "SrcDonnees"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SQLdataset",
+						"type": "DatasetReference"
+					},
+					"name": "DestinationDB"
+				}
+			],
+			"transformations": [
+				{
+					"name": "RenameColumns"
+				},
+				{
+					"name": "aggregate1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          VendorID as integer,",
+				"          tpep_pickup_datetime as timestamp,",
+				"          tpep_dropoff_datetime as timestamp,",
+				"          passenger_count as long,",
+				"          trip_distance as double,",
+				"          RatecodeID as long,",
+				"          store_and_fwd_flag as string,",
+				"          PULocationID as integer,",
+				"          DOLocationID as integer,",
+				"          payment_type as long,",
+				"          fare_amount as double,",
+				"          extra as double,",
+				"          mta_tax as double,",
+				"          tip_amount as double,",
+				"          tolls_amount as double,",
+				"          improvement_surcharge as double,",
+				"          total_amount as double,",
+				"          congestion_surcharge as double,",
+				"          Airport_fee as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> SrcDonnees",
+				"SrcDonnees select(mapColumn(",
+				"          trip_distance,",
+				"          payment_type,",
+				"          total_amount,",
+				"          vendor = VendorID",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> RenameColumns",
+				"RenameColumns aggregate(groupBy(payment_type),",
+				"     vendor = count()) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> DestinationDB"
+			]
+		}
+	}
+}
