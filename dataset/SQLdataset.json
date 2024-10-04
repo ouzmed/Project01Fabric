@@ -7,10 +7,6 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": [],
-		"typeProperties": {
-			"schema": "stage",
-			"table": "tbl_test"
-		}
+		"schema": []
 	}
 }
